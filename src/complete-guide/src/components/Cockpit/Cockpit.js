@@ -1,34 +1,41 @@
-import React, {useEffect} from 'react';
+import React, { useEffect, useRef } from 'react';
 import classes from './Cockpit.module.css';
 
 const cockpit = (props) => {
-    useEffect(() =>{
+    const toggleBtnRef = useRef(null);
+
+
+    useEffect(() => {
         console.log("[Cockpit.js] useEffect");
 
-        setTimeout(()=>{
-            console.log('fisr time load');
-        },1000);
-    }, [ ]);
-    useEffect(() =>{
+        toggleBtnRef.current.click();
+        return () => {
+            console.log("[Cockpit.js] clean up");
+        };
+    }, []);
+
+
+
+    useEffect(() => {
         console.log("[Cockpit.js] useEffect");
 
-        setTimeout(()=>{
+        setTimeout(() => {
             console.log('save data to cloud when person changed');
-        },1000);
+        }, 1000);
     }, [props.persons]);
 
-    const assignedClasses= [];
-    let btnClass= '';
+    const assignedClasses = [];
+    let btnClass = '';
 
-    if(props.showPersons){
+    if (props.showPersons) {
         btnClass = classes.RedButton
     }
 
-    if(props.persons.length <=2){
-      assignedClasses.push(classes.red);
+    if (props.personsLength <= 2) {
+        assignedClasses.push(classes.red);
     }
-    if(props.persons.length<=1){
-      assignedClasses.push(classes.bold);
+    if (props.personsLength <= 1) {
+        assignedClasses.push(classes.bold);
     }
 
 
@@ -36,9 +43,18 @@ const cockpit = (props) => {
         <div className={classes.Cockpit}>
             <h1>{props.title}</h1>
             <p className={assignedClasses.join(' ')}>This is really working</p>
-            <button className={btnClass} onClick={props.clicked}>{props.showPersons ? 'Hide Persons' : 'Show Persons'}</button>
+            <button
+                className={btnClass}
+                onClick={props.clicked}
+                ref={toggleBtnRef}>
+                {props.showPersons ? 'Hide Persons' : 'Show Persons'}
+            </button>
+            <button
+                onClick ={props.login}>
+                Login
+            </button>
         </div>
     );
 }
 
-export default cockpit;
+export default React.memo(cockpit);
